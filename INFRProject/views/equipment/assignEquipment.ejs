@@ -1,0 +1,55 @@
+<div class="container">
+  <h1>Assign Equipment</h1>
+  <form action="/equipment/assign" method="POST">
+  <!-- Engineer Dropdown -->
+  <div class="form-group">
+    <label for="engineer-search">Search Engineer</label>
+    <input
+      type="text"
+      id="engineer-search"
+      class="form-control"
+      placeholder="Type engineer name..."
+      autocomplete="off"
+    />
+    <ul id="engineer-list" class="list-group"></ul>
+    <input type="hidden" id="engineerId" name="engineerId" required />
+  </div>
+
+  <!-- Equipment Dropdown -->
+  <div class="form-group">
+    <label for="equipmentId">Select Equipment</label>
+    <select class="form-control" id="equipmentId" name="equipmentId" required>
+      <% equipment.forEach(item => { %>
+        <option value="<%= item._id %>"><%= item.name %> - <%= item.status %></option>
+      <% }); %>
+    </select>
+  </div>
+
+  <button type="submit" class="btn btn-primary">Assign</button>
+</form>
+
+<script>
+  // Fetch engineers as user types in the search box
+  document.getElementById('engineer-search').addEventListener('input', async (e) => {
+    const query = e.target.value;
+    if (query.length < 2) return;
+
+    const response = await fetch(`/manager/search-engineers?query=${query}`);
+    const engineers = await response.json();
+
+    const list = document.getElementById('engineer-list');
+    list.innerHTML = '';
+
+    engineers.forEach(engineer => {
+      const li = document.createElement('li');
+      li.textContent = engineer.username;
+      li.className = 'list-group-item';
+      li.onclick = () => {
+        document.getElementById('engineer-search').value = engineer.username;
+        document.getElementById('engineerId').value = engineer._id;
+        list.innerHTML = ''; // Clear the dropdown
+      };
+      list.appendChild(li);
+    });
+  });
+</script>

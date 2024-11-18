@@ -1,0 +1,22 @@
+<%- include('./Partials/header') %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="container mt-5">
+    <h1 class="text-center">Welcome to the Equipment Management System</h1>
+    <p class="text-center">Manage equipment requests, inventory, and more efficiently.</p>
+    <div class="d-flex justify-content-center mt-4">
+      <a href="/equipment/check" class="btn btn-primary mx-2">View Equipment</a>
+      <a href="/equipment/add" class="btn btn-secondary mx-2">Add Equipment</a>
+      <a href="/requests" class="btn btn-success mx-2">View Equipment Requests</a>
+      <a href="/requests/add" class="btn btn-info mx-2">Request New Equipment</a>
+    </div>
+  </div>
+</body>
+<%- include('./Partials/footer') %>

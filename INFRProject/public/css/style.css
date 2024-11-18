@@ -1,0 +1,129 @@
+/* General Styles */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f9f9f9; /* Light gray */
+  color: #333;
+}
+
+h1, h2, h3 {
+  color: #FF7F00; /* Darker orange */
+  text-align: center;
+}
+
+/* Navigation Bar */
+nav {
+  background-color: #FF6F00; /* Slightly darker orange */
+  color: #fff;
+  padding: 10px;
+  text-align: center;
+}
+
+nav a {
+  color: #fff;
+  text-decoration: none;
+  margin: 0 15px;
+  font-weight: bold;
+}
+
+nav a:hover {
+  text-decoration: underline;
+}
+
+/* Table Styles */
+table {
+  width: 90%;
+  margin: 20px auto;
+  border-collapse: collapse;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+}
+
+table th, table td {
+  padding: 10px;
+  text-align: left;
+  border: 1px solid #ddd;
+}
+
+table th {
+  background-color: #FF6F00; /* Darker orange */
+  color: #fff;
+}
+
+table td {
+  color: #333;
+}
+
+table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+/* Buttons */
+button {
+  background-color: #FF7F00; /* Darker orange */
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+button:hover {
+  background-color: #E56700; /* Even darker orange */
+}
+
+/* Forms */
+form {
+  margin: 20px auto;
+  padding: 20px;
+  width: 80%;
+  max-width: 500px;
+  background-color: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+}
+
+form label {
+  display: block;
+  margin: 10px 0 5px;
+  font-weight: bold;
+}
+
+form input, form select, form textarea {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+/* Links */
+a {
+  color: #FF7F00; /* Darker orange */
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 10px;
+  background-color: #FF6F00; /* Slightly darker orange */
+  color: white;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+
+.equipment-table {
+  margin: 20px auto;
+  width: 95%;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  overflow: hidden;
+}

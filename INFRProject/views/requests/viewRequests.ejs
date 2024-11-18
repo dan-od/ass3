@@ -1,0 +1,44 @@
+<%- include('../Partials/header') %>
+<main class="container mt-4">
+  <h1 class="mb-4"><%= title %></h1>
+  <table class="table table-bordered table-striped">
+    <thead class="table-dark">
+      <tr>
+        <th>Equipment Name</th>
+        <th>Category</th>
+        <th>Reason</th>
+        <th>Priority</th>
+        <th>Requested By</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% requests.forEach(req => { %>
+        <tr>
+          <td><%= req.equipmentName %></td>
+          <td><%= req.category %></td>
+          <td><%= req.reason %></td>
+          <td><%= req.priority %></td>
+          <td><%= req.requestedBy %></td>
+          <td><%= req.status %></td>
+          <td>
+            <% if (req.status === 'Pending') { %>
+              <form action="/requests/approve/<%= req._id %>" method="POST" style="display:inline;">
+                <button type="submit" class="btn btn-success btn-sm">Approve</button>
+              </form>
+              <form action="/requests/reject/<%= req._id %>" method="POST" style="display:inline;">
+                <input type="text" name="reason" class="form-control mb-1" placeholder="Reason for rejection" required>
+                <button type="submit" class="btn btn-danger btn-sm">Reject</button>
+              </form>
+            <% } else { %>
+              <span class="badge bg-info"><%= req.status %></span>
+            <% } %>
+          </td>
+        </tr>
+      <% }); %>
+    </tbody>
+  </table>
+  <a href="/" class="btn btn-secondary">Back to Home</a>
+</main>
+<%- include('../Partials/footer') %>

@@ -1,0 +1,45 @@
+<%- include('../Partials/header') %>
+
+<h1>Admin Dashboard</h1>
+<p>Welcome, <%= user.username %>! You have admin privileges.</p>
+<ul>
+  <li><a href="/equipment/add">Add New Equipment</a></li>
+  <li><a href="/equipment">View All Equipment</a></li>
+</ul>
+
+<h2>Pending Requests</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Request ID</th>
+      <th>Requested By</th>
+      <th>Item</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% if (requests && requests.length > 0) { %>
+      <% requests.forEach(request => { %>
+        <tr>
+          <td><%= request._id %></td>
+          <td><%= request.requestedBy %></td>
+          <td><%= request.item %></td>
+          <td>
+            <form action="/admin/approve/<%= request._id %>" method="POST">
+              <button type="submit">Approve</button>
+            </form>
+            <form action="/admin/deny/<%= request._id %>" method="POST">
+              <button type="submit">Deny</button>
+            </form>
+          </td>
+        </tr>
+      <% }) %>
+    <% } else { %>
+      <tr>
+        <td colspan="4">No pending requests.</td>
+      </tr>
+    <% } %>
+  </tbody>
+</table>
+
+<%- include('../Partials/footer') %>

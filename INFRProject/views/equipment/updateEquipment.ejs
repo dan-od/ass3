@@ -1,0 +1,30 @@
+<%- include('../Partials/header') %>
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= title %></title>
+</head>
+<body>
+  <h1><%= title %></h1>
+  <form action="/equipment/update/<%= equipment._id %>" method="POST">
+    <label>Name: <input type="text" name="name" value="<%= equipment.name %>" readonly></label><br>
+    <label>Category: <input type="text" name="category" value="<%= equipment.category %>" readonly></label><br>
+    <label>Serial Number: <input type="text" name="serialNumber" value="<%= equipment.serialNumber %>" readonly></label><br>
+    <label>Purchase Date: <input type="text" name="purchaseDate" value="<%= equipment.purchaseDate.toDateString() %>" readonly></label><br>
+    <label>Status:
+      <select name="status">
+        <option value="Available" <%= equipment.status === 'Available' ? 'selected' : '' %>>Available</option>
+        <option value="In Use" <%= equipment.status === 'In Use' ? 'selected' : '' %>>In Use</option>
+        <option value="Needs Repair" <%= equipment.status === 'Needs Repair' ? 'selected' : '' %>>Needs Repair</option>
+        <option value="Retired" <%= equipment.status === 'Retired' ? 'selected' : '' %>>Retired</option>
+      </select>
+    </label><br>
+    <label>Notes: <textarea name="notes"><%= equipment.notes %></textarea></label><br>
+    <button type="submit">Update</button>
+  </form>
+  <a href="/equipment/check">Back to Inventory</a>
+</body>
+</html>
+
+<%- include('../Partials/footer') %>

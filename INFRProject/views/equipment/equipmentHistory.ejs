@@ -1,0 +1,11 @@
+<%- include('../Partials/header') %>
+<main>
+  <h2>Equipment History</h2>
+  <% equipment.history.forEach(action => { %>
+    <p><strong>Action:</strong> <%= action.action %></p>
+    <p><strong>Date:</strong> <%= action.date.toDateString() %></p>
+    <p><strong>Performed By:</strong> <%= action.performedBy %></p>
+    <hr>
+  <% }) %>
+</main>
+<%- include('../Partials/footer') %>

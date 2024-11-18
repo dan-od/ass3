@@ -1,0 +1,9 @@
+<%- include('../Partials/header') %>
+<h1>Manager Dashboard</h1>
+<p>Welcome, <%= user.username %>! You have manager privileges.</p>
+<ul>
+    <li><a href="/equipment">View All Equipments</a></li>
+    <li><a href="/equipment/add">Add New Equipment</a></li>
+    <li><a href="/requests">Approve/Reject Requests</a></li>
+</ul>
+<%- include('../Partials/footer') %>
