@@ -1,0 +1,14 @@
+<%- include('../Partials/header') %>
+<h1>Engineer Dashboard</h1>
+<p>Welcome, <%= user.username %>! You have engineer privileges.</p>
+
+<div class="container">
+  <h2>Actions</h2>
+  <ul>
+    <li><a href="/engineer/assigned">Check Assigned Equipment</a></li> <!-- Button to view assigned equipment -->
+    <li><a href="/equipment">View All Equipment</a></li>
+    <li><a href="/requests/add">Request New Equipment</a></li> <!-- Request Equipment Button -->
+    <li><a href="/requests/view">View Equipment Requests</a></li>
+  </ul>
+</div>
+<%- include('../Partials/footer') %>

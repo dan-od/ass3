@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+</head>
+<body>
+    <h1>Admin Dashboard</h1>
+    <p>Welcome, <%= user.username %>! You have admin privileges.</p>
+
+    <h2>Pending Requests</h2>
+    <ul>
+        <% if (requests && requests.length > 0) { %>
+            <% requests.forEach(request => { %>
+                <li>
+                    <p><strong>Request ID:</strong> <%= request._id %></p>
+                    <p><strong>Status:</strong> <%= request.status %></p>
+                    <form action="/admin/approve/<%= request._id %>" method="POST">
+                        <button type="submit">Approve</button>
+                    </form>
+                    <form action="/admin/deny/<%= request._id %>" method="POST">
+                        <button type="submit">Deny</button>
+                    </form>
+                </li>
+            <% }); %>
+        <% } else { %>
+            <p>No pending requests</p>
+        <% } %>
+    </ul>
+</body>
+</html>

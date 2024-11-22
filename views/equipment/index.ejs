@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/style.css"> 
+</head>
+<body>
+  <h1>Equipment Inventory</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Category</th>
+        <th>Serial Number</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (equipment.length > 0) { %>
+        <% equipment.forEach(item => { %>
+          <tr>
+            <td><%= item.name %></td>
+            <td><%= item.category %></td>
+            <td><%= item.serialNumber || 'N/A' %></td>
+            <td><%= item.status %></td>
+            <td>
+              <a href="/equipment/details/<%= item._id %>">Details</a>
+              <% if (user && user.role === 'Admin') { %>
+                | <a href="/equipment/update/<%= item._id %>">Update</a>
+                | <form action="/equipment/delete/<%= item._id %>" method="POST" style="display:inline;">
+                  <button type="submit">Delete</button>
+                </form>
+              <% } %>
+            </td>
+          </tr>
+        <% }); %>
+      <% } else { %>
+        <tr>
+          <td colspan="5">No equipment found.</td>
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+  <div class="text-center mt-4">
+    <a href="/<%= userRole.toLowerCase() %>/home" class="btn btn-secondary">Back to Dashboard</a>
+  </div>
+</body>
+</html>

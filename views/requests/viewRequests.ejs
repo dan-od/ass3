@@ -1,0 +1,61 @@
+<%- include('../Partials/header') %>
+<main class="container mt-4">
+  <h1 class="mb-4"><%= title %></h1>
+  <table class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th>Equipment Name</th>
+        <th>Category</th>
+        <th>Reason</th>
+        <th>Priority</th>
+        <th>Requested By</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% requests.forEach((request) => { %>
+        <tr>
+          <td><%= request.equipmentName %></td>
+          <td><%= request.category %></td>
+          <td><%= request.reason %></td>
+          <td><%= request.priority %></td>
+          <td><%= request.requestedBy?.username || 'N/A' %></td>
+          <td><%= request.status %></td>
+          <td>
+            <% if (request.canApproveOrReject) { %>
+              <form action="/requests/approve/<%= request._id %>" method="POST" style="display:inline;">
+                <button class="btn btn-success" type="submit">Approve</button>
+              </form>
+              <form action="/requests/reject/<%= request._id %>" method="POST" style="display:inline;">
+                <input
+                  type="text"
+                  name="reason"
+                  placeholder="Reason for rejection"
+                  required
+                  style="margin-right: 5px;"
+                />
+                <button class="btn btn-danger" type="submit">Reject</button>
+              </form>
+            <% } else { %>
+              <span><%= request.status %></span>
+            <% } %>
+          </td>
+        </tr>
+      <% }); %>
+    </tbody>
+  </table>
+
+  <!-- Back to Dashboard Button -->
+  <div class="text-center mt-4" style="clear: both;">
+    <% if (userRole === 'Admin') { %>
+      <a href="/admin/home" class="btn btn-secondary">Back to Dashboard</a>
+    <% } else if (userRole === 'Manager') { %>
+      <a href="/manager/home" class="btn btn-secondary">Back to Dashboard</a>
+    <% } else if (userRole === 'Engineer') { %>
+      <a href="/engineer/home" class="btn btn-secondary">Back to Dashboard</a>
+    <% } %>
+  </div>
+</main>
+
+<%- include('../Partials/footer') %>

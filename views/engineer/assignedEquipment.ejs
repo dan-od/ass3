@@ -1,0 +1,24 @@
+<%- include('../Partials/header') %>
+<h1>Assigned Equipment</h1>
+<p>Welcome, <%= user.username %>. Here is the equipment assigned to you:</p>
+
+<div class="container">
+  <h2>Assigned Equipment List</h2>
+  <ul>
+    <% if (equipment && equipment.length > 0) { %>
+      <% equipment.forEach(item => { %>
+        <li>
+          <strong><%= item.name %></strong> - Status: <%= item.status %>
+          <% if (item.notes) { %>
+            <br>Notes: <%= item.notes %>
+          <% } %>
+        </li>
+      <% }); %>
+    <% } else { %>
+      <li>No equipment assigned to you yet.</li>
+    <% } %>
+  </ul>
+</div>
+
+<a href="/engineer/home">Back to Dashboard</a>
+<%- include('../Partials/footer') %>

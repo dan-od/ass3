@@ -1,0 +1,40 @@
+<%- include('../Partials/header') %>
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= title %></title>
+</head>
+<body>
+  <h1><%= title %></h1>
+  <table border="1">
+    <thead>
+      <tr>
+        <th>Action</th>
+        <th>Date</th>
+        <th>Performed By</th>
+        <th>Notes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (history && history.length > 0) { %>
+        <% history.forEach((entry) => { %>
+          <tr>
+            <td><%= entry.action %></td>
+            <td><%= new Date(entry.date).toLocaleString() %></td>
+            <td><%= entry.performedBy %></td>
+            <td><%= entry.notes || 'N/A' %></td>
+          </tr>
+        <% }); %>
+      <% } else { %>
+        <tr>
+          <td colspan="4">No history available.</td>
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+  <a href="/equipment/check">Back to Inventory</a>
+</body>
+</html>
+
+<%- include('../Partials/header') %>

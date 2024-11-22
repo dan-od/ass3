@@ -1,0 +1,25 @@
+<%- include('../Partials/header') %>
+<main>
+  <h2>Lookup Equipment</h2>
+  <form action="/equipment/lookup" method="POST">
+    <label for="serialNumber">Serial Number:</label>
+    <input type="text" name="serialNumber"><br>
+
+    <label for="locationType">Location Type:</label>
+    <select name="locationType">
+      <option value="">All</option>
+      <option value="Base">Base</option>
+      <option value="Field">Field</option>
+    </select><br>
+
+    <label for="fieldName">Field Name:</label>
+    <input type="text" name="fieldName"><br>
+
+    <button type="submit">Search</button>
+  </form>
+
+  <% if (message) { %>
+    <p><%= message %></p>
+  <% } %>
+</main>
+<%- include('../Partials/footer') %>
