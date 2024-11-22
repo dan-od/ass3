@@ -6,7 +6,6 @@ const authenticate = require('../middleware/authenticate');
 const authorize = require('../middleware/authorize');
 
 // Route to view all requests
-// Route to view all requests
 router.get('/view', authenticate, async (req, res) => {
     try {
         const requests = await Request.find().populate('requestedBy'); // Fetch requests
@@ -80,22 +79,14 @@ router.post('/add', authenticate, async (req, res) => {
 });
 
 // Route to view all requests
-// Route to view all requests
 router.get('/view', authenticate, async (req, res) => {
     try {
-        const requests = await Request.find().populate('requestedBy'); // Fetch requests
-        const isAdmin = req.user.role === 'Admin';
-
-        // Define the route for the dashboard based on the user's role
-        const processedRequests = requests.map((request) => ({
-            ...request.toObject(),
-            canApproveOrReject: isAdmin, // Add a flag for admin actions
-        }));
-
+        const requests = await Request.find().populate('requestedBy');
+        console.log(requests);  // Log the requests to verify
         res.render('requests/viewRequests', {
             title: 'Equipment Requests',
-            requests: processedRequests, // Send processed data
-            userRole: req.user.role, // Send the role directly
+            requests,
+            userRole: req.user.role,
         });
     } catch (error) {
         console.error('Error fetching requests:', error.message);
@@ -105,8 +96,6 @@ router.get('/view', authenticate, async (req, res) => {
         });
     }
 });
-
-
 
 router.post('/add', authenticate, async (req, res) => {
   try {
@@ -155,7 +144,10 @@ router.post('/update/:id', async (req, res) => {
 });
 
 
-// Route to approve a request
+/// Route to approve a request
+router.get('/approve/:id', (req, res) => {
+  res.redirect(`/requests/approve/${req.params.id}`);
+});
 router.post('/approve/:id', async (req, res) => {
   try {
     const request = await Request.findById(req.params.id);
@@ -166,7 +158,7 @@ router.post('/approve/:id', async (req, res) => {
     // Check if equipment already exists in the inventory
     let equipment = await Equipment.findOne({ name: request.equipmentName });
     if (!equipment) {
-      // Add equipment to inventory
+      // Add equipment to inventory if it doesn't exist
       equipment = new Equipment({
         name: request.equipmentName,
         category: request.category,
@@ -191,12 +183,12 @@ router.post('/approve/:id', async (req, res) => {
       await equipment.save();
     }
 
-    // Update request status
+    // Update request status to 'Approved'
     request.status = 'Approved';
     request.updatedAt = Date.now();
     await request.save();
 
-    res.redirect('/requests'); // Redirect back to requests page
+    res.redirect('/requests'); // Redirect to the requests page
   } catch (error) {
     console.error('Error approving request:', error);
     res.status(500).send({ message: 'Error approving request', error });
@@ -206,26 +198,27 @@ router.post('/approve/:id', async (req, res) => {
 // Route to reject a request
 router.post('/reject/:id', async (req, res) => {
   try {
-    const { reason } = req.body; // Get the rejection reason from the form
-
+    const { reason } = req.body;
     const request = await Request.findById(req.params.id);
     if (!request) {
       return res.status(404).send({ message: 'Request not found' });
     }
 
-    // Update request status and add rejection reason
+    // Update request status to 'Rejected'
     request.status = 'Rejected';
     request.updatedAt = Date.now();
     request.rejectionReason = reason || 'No reason provided';
 
     await request.save();
 
-    res.redirect('/requests'); // Redirect back to the requests list
+    res.redirect('/requests'); // Redirect to the requests page
   } catch (error) {
     console.error('Error rejecting request:', error.message);
     res.status(500).send({ message: 'Error rejecting request', error: error.message });
   }
 });
+
+
 
 
 // Route to link equipment to a request

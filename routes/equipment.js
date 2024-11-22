@@ -1,4 +1,5 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const router = express.Router();
 const Equipment = require('../models/equipment');
 const User = require('../models/users'); // Import the User model
@@ -16,7 +17,7 @@ router.get('/', authenticate, async (req, res) => {
             title: 'Equipment Inventory',
             equipment, // Pass equipment data
             user: req.user, // Pass the entire user object
-            userRole: req.user.role, // Optionally pass the user role
+            userRole: req.user.role, //  pass the user role
         });
     } catch (error) {
         console.error('Error rendering equipment page:', error.message);
@@ -26,28 +27,22 @@ router.get('/', authenticate, async (req, res) => {
 
 
 router.get('/view', authenticate, async (req, res) => {
-    try {
-        const requests = await Request.find().populate('requestedBy'); // Fetch requests
-        const isAdmin = req.user.role === 'Admin';
-
-        const processedRequests = requests.map((request) => ({
-            ...request.toObject(),
-            canApproveOrReject: isAdmin, // Add a flag for admin actions
-        }));
-
-        res.render('requests/viewRequests', {
-            title: 'Equipment Requests',
-            requests: processedRequests, // Send processed data
-            userRole: req.user.role.toLowerCase(), // Pass user role in lowercase
-        });
-    } catch (error) {
-        console.error('Error fetching requests:', error.message);
-        res.status(500).send({
-            message: 'Error fetching requests',
-            error: error.message,
-        });
-    }
+  try {
+    const equipment = await Equipment.find(); // Fetch all equipment
+    res.render('equipment/index', { 
+      title: 'Equipment Inventory',
+      equipment, // Pass equipment data to the view
+      user: req.user, 
+      userRole: req.user.role, 
+    });
+  } catch (error) {
+    console.error('Error fetching equipment:', error.message);
+    res.status(500).send('Error fetching equipment');
+  }
 });
+;
+
+
 
 router.get('/check', authenticate, async (req, res) => {
   try {
@@ -192,25 +187,96 @@ router.post('/approve/:id', authenticate, authorize('Admin'), async (req, res) =
   }
 });
 
-// Reject Request
-router.post('/reject/:id', authenticate, authorize('Admin'), async (req, res) => {
-  try {
-    const { reason } = req.body;
-
-    const request = await Request.findById(req.params.id);
-    if (!request) {
-      return res.status(404).send({ message: 'Request not found' });
+// Route to show equipment details
+router.get('/details/:id', authenticate, async (req, res) => {
+    try {
+        const equipment = await Equipment.findById(req.params.id).populate('assignedTo');
+        if (!equipment) {
+            return res.status(404).send('Equipment not found');
+        }
+        res.render('equipment/details', {
+            title: 'Equipment Details',
+            equipment,
+            user: req.user,
+        });
+    } catch (error) {
+        console.error('Error fetching equipment details:', error.message);
+        res.status(500).send('Error fetching equipment details');
     }
-    request.status = 'Rejected';
-    request.rejectionReason = reason;
-    request.updatedAt = Date.now();
-    await request.save();
+});
 
-    res.redirect('/requests');
+// Route to update equipment
+router.get('/update/:id', async (req, res) => {
+    try {
+        const equipment = await Equipment.findById(req.params.id).populate('assignedTo');
+        const engineers = await User.find({ role: 'Engineer' });
+
+        if (!equipment) {
+            return res.status(404).send('Equipment not found');
+        }
+
+        // Pass 'title' as part of the data sent to the view
+        res.render('equipment/updateEquipment', {
+            title: 'Update Equipment',
+            equipment,
+            engineers,
+        });
+    } catch (error) {
+        console.error('Error fetching equipment for update:', error);
+        res.status(500).send('Error fetching equipment');
+    }
+});
+
+
+// Route to update equipment
+router.post('/update/:id', async (req, res) => {
+  try {
+    const { assignedTo, status } = req.body;  // Extract status and assignedTo from the form input
+
+    // Find the equipment by its ID
+    const equipment = await Equipment.findById(req.params.id);
+    if (!equipment) {
+      return res.status(404).send({ message: 'Equipment not found' });
+    }
+
+    // If an engineer is selected, ensure that the assignedTo field is set as an ObjectId
+    if (assignedTo) {
+      // Assign the ObjectId from the engineer selection
+      equipment.assignedTo = mongoose.Types.ObjectId(assignedTo); // This will ensure the proper assignment
+    }
+
+    // Update the status of the equipment
+    if (status) {
+      equipment.status = status; // Update the status field
+    }
+
+    // Save the equipment with the updated fields
+    await equipment.save();
+
+    res.redirect('/equipment');  // Redirect to the equipment list page after updating
   } catch (error) {
-    console.error('Error rejecting request:', error.message);
-    res.status(500).send({ message: 'Error rejecting request', error: error.message });
+    console.error('Error updating equipment:', error.message);
+    res.status(500).send({ message: 'Error updating equipment', error: error.message });
   }
 });
+
+
+
+router.post('/delete/:id', async (req, res) => {
+    try {
+        const equipmentId = req.params.id;
+        const equipment = await Equipment.findByIdAndDelete(equipmentId); // Delete the equipment by ID
+
+        if (!equipment) {
+            return res.status(404).send({ message: 'Equipment not found' });
+        }
+
+        res.redirect('/equipment'); // Redirect to equipment list page
+    } catch (error) {
+        console.error('Error deleting equipment:', error.message);
+        res.status(500).send({ message: 'Error deleting equipment', error: error.message });
+    }
+});
+
 
 module.exports = router;

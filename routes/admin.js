@@ -4,22 +4,21 @@ const authenticate = require('../middleware/authenticate');
 const authorize = require('../middleware/authorize');
 const Request = require('../models/request'); // Ensure you have a Request model
 
-// Admin Home Page
-router.get('/home', authenticate, authorize('Admin'), async (req, res) => {
-    try {
-        const requests = await Request.find(); // Fetch all requests
-        console.log('Requests fetched:', requests); // Debug: Log fetched requests
-        res.render('admin/home', {
-            title: 'Admin Dashboard',
-            user: req.user,
-            requests // Pass requests to the view
-        });
-    } catch (err) {
-        console.error('Error loading admin home:', err.message);
-        res.status(500).send('Error loading admin home');
-    }
+// Admin route
+router.get('/home', authenticate, async (req, res) => {
+  try {
+    // Add the role of the user to the render context
+    res.render('admin/home', {
+      title: 'Admin Dashboard',
+      requests: [], // assuming you also want to pass some requests data
+      user: req.user,
+      userRole: req.user.role, // Pass user role here
+    });
+  } catch (error) {
+    console.error('Error rendering admin home page:', error);
+    res.status(500).send('Internal Server Error');
+  }
 });
-
 
 
 router.get('/', authenticate, authorize('Admin'), async (req, res) => {
@@ -31,7 +30,6 @@ router.get('/', authenticate, authorize('Admin'), async (req, res) => {
         res.status(500).send('Error loading admin dashboard');
     }
 });
-
 
 // Route to search engineers by name
 router.get('/search-engineers', async (req, res) => {

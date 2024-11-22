@@ -1,42 +1,23 @@
 <%- include('../Partials/header') %>
 
-<!DOCTYPE html>
-<html>
-<head>
-  <title><%= title %></title>
-</head>
-<body>
-  <h1><%= title %></h1>
-  <p><strong>Name:</strong> <%= equipment.name %></p>
-  <p><strong>Category:</strong> <%= equipment.category %></p>
-  <p><strong>Status:</strong> <%= equipment.status %></p>
+<main class="container mt-4">
+    <h1>Equipment Details</h1>
+    <p><strong>Name:</strong> <%= equipment.name %></p>
+    <p><strong>Category:</strong> <%= equipment.category %></p>
+    <p><strong>Status:</strong> <%= equipment.status %></p>
 
-  <h3>Update Status</h3>
-  <form action="/equipment/update/<%= equipment._id %>" method="POST">
-    <label for="status">Status:</label>
-    <select name="status" id="status">
-      <option value="Available" <%= equipment.status === 'Available' ? 'selected' : '' %>>Available</option>
-      <option value="Assigned" <%= equipment.status === 'Assigned' ? 'selected' : '' %>>Assigned</option>
-      <option value="In Use" <%= equipment.status === 'In Use' ? 'selected' : '' %>>In Use</option>
-      <option value="Needs Repair" <%= equipment.status === 'Needs Repair' ? 'selected' : '' %>>Needs Repair</option>
-      <option value="Retired" <%= equipment.status === 'Retired' ? 'selected' : '' %>>Retired</option>
-    </select>
-    <button type="submit">Update</button>
-  </form>
+    <h3>Action History</h3>
+    <% if (equipment.history && equipment.history.length) { %>
+        <ul>
+        <% equipment.history.forEach((entry) => { %>
+            <li><%= entry.action %> on <%= entry.date %> by <%= entry.performedBy %> - Notes: <%= entry.notes %></li>
+        <% }); %>
+        </ul>
+    <% } else { %>
+        <p>No action history available.</p>
+    <% } %>
 
-  <h2>Action History</h2>
-  <ul>
-    <% equipment.history.forEach(log => { %>
-        <li>
-            <strong><%= log.action %></strong> on <%= log.date.toDateString() %> by <%= log.performedBy %>
-            <% if (log.notes) { %> - Notes: <%= log.notes %><% } %>
-        </li>
-    <% }) %>
-  </ul>
-
-
-  <a href="/equipment/check">Back to Equipment List</a>
-</body>
-</html>
+    <a href="/equipment" class="btn btn-secondary">Back to Equipment List</a>
+</main>
 
 <%- include('../Partials/footer') %>

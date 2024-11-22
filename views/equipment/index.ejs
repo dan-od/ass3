@@ -15,6 +15,7 @@
         <th>Category</th>
         <th>Serial Number</th>
         <th>Status</th>
+        <th>Assigned to</th>
         <th>Actions</th>
       </tr>
     </thead>
@@ -26,6 +27,7 @@
             <td><%= item.category %></td>
             <td><%= item.serialNumber || 'N/A' %></td>
             <td><%= item.status %></td>
+            <td><%= item.assignedTo ? item.assignedTo.username : 'N/A' %></td>
             <td>
               <a href="/equipment/details/<%= item._id %>">Details</a>
               <% if (user && user.role === 'Admin') { %>

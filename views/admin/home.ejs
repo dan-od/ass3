@@ -1,45 +1,55 @@
 <%- include('../Partials/header') %>
+<main class="container mt-4">
+  <h1 class="mb-4">Admin Dashboard</h1>
+  <p>Welcome, admin! You have admin privileges.</p>
+  <ul>
+    <li><a href="/equipment/add">Add New Equipment</a></li>
+    <li><a href="/equipment/view">View All Equipment</a></li>
+    <li><a href="/requests/view">View Requests</a></li>
+  </ul>
 
-<h1>Admin Dashboard</h1>
-<p>Welcome, <%= user.username %>! You have admin privileges.</p>
-<ul>
-  <li><a href="/equipment/add">Add New Equipment</a></li>
-  <li><a href="/equipment">View All Equipment</a></li>
-</ul>
-
-<h2>Pending Requests</h2>
-<table>
-  <thead>
-    <tr>
-      <th>Request ID</th>
-      <th>Requested By</th>
-      <th>Item</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% if (requests && requests.length > 0) { %>
-      <% requests.forEach(request => { %>
+  <!-- Pending Requests Table (Initially hidden) -->
+  <div id="pendingRequests" style="display:none;">
+    <h2>Pending Requests</h2>
+    <table class="table table-bordered table-striped">
+      <thead>
         <tr>
-          <td><%= request._id %></td>
-          <td><%= request.requestedBy %></td>
-          <td><%= request.item %></td>
-          <td>
-            <form action="/admin/approve/<%= request._id %>" method="POST">
-              <button type="submit">Approve</button>
-            </form>
-            <form action="/admin/deny/<%= request._id %>" method="POST">
-              <button type="submit">Deny</button>
-            </form>
-          </td>
+          <th>Request ID</th>
+          <th>Requested By</th>
+          <th>Item</th>
+          <th>Actions</th>
         </tr>
-      <% }) %>
-    <% } else { %>
-      <tr>
-        <td colspan="4">No pending requests.</td>
-      </tr>
+      </thead>
+      <tbody>
+        <% requests.forEach(request => { %>
+          <tr>
+            <td><%= request._id %></td>
+            <td><%= request.requestedBy ? request.requestedBy.username : 'N/A' %></td> <!-- Handle undefined case -->
+            <td><%= request.equipmentName %></td>
+            <td>
+              <form action="/requests/approve/<%= request._id %>" method="POST" style="display:inline;">
+                <button class="btn btn-success" type="submit">Approve</button>
+              </form>
+              <form action="/requests/reject/<%= request._id %>" method="POST" style="display:inline;">
+                <button class="btn btn-danger" type="submit">Deny</button>
+              </form>
+            </td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Back to Dashboard Link -->
+  <div class="text-center mt-4">
+    <% if (userRole === 'Admin') { %>
+      <a href="/admin/home" class="btn btn-secondary">Back to Dashboard</a>
+    <% } else if (userRole === 'Manager') { %>
+      <a href="/manager/home" class="btn btn-secondary">Back to Dashboard</a>
+    <% } else if (userRole === 'Engineer') { %>
+      <a href="/engineer/home" class="btn btn-secondary">Back to Dashboard</a>
     <% } %>
-  </tbody>
-</table>
+  </div>
+</main>
 
 <%- include('../Partials/footer') %>

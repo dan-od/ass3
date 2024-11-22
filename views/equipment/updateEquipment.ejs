@@ -1,30 +1,42 @@
 <%- include('../Partials/header') %>
 
-<!DOCTYPE html>
-<html>
-<head>
-  <title><%= title %></title>
-</head>
-<body>
-  <h1><%= title %></h1>
-  <form action="/equipment/update/<%= equipment._id %>" method="POST">
-    <label>Name: <input type="text" name="name" value="<%= equipment.name %>" readonly></label><br>
-    <label>Category: <input type="text" name="category" value="<%= equipment.category %>" readonly></label><br>
-    <label>Serial Number: <input type="text" name="serialNumber" value="<%= equipment.serialNumber %>" readonly></label><br>
-    <label>Purchase Date: <input type="text" name="purchaseDate" value="<%= equipment.purchaseDate.toDateString() %>" readonly></label><br>
-    <label>Status:
-      <select name="status">
-        <option value="Available" <%= equipment.status === 'Available' ? 'selected' : '' %>>Available</option>
-        <option value="In Use" <%= equipment.status === 'In Use' ? 'selected' : '' %>>In Use</option>
-        <option value="Needs Repair" <%= equipment.status === 'Needs Repair' ? 'selected' : '' %>>Needs Repair</option>
-        <option value="Retired" <%= equipment.status === 'Retired' ? 'selected' : '' %>>Retired</option>
-      </select>
-    </label><br>
-    <label>Notes: <textarea name="notes"><%= equipment.notes %></textarea></label><br>
-    <button type="submit">Update</button>
-  </form>
-  <a href="/equipment/check">Back to Inventory</a>
-</body>
-</html>
+<main class="container mt-4">
+    <h1>Update Equipment</h1>
+
+    <form action="/equipment/update/<%= equipment._id %>" method="POST">
+        <div class="form-group">
+            <label for="name">Name:</label>
+            <input type="text" class="form-control" id="name" name="name" value="<%= equipment.name %>" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="category">Category:</label>
+            <input type="text" class="form-control" id="category" name="category" value="<%= equipment.category %>" required>
+        </div>
+
+        <div class="form-group">
+            <label for="status">Status:</label>
+            <select class="form-control" id="status" name="status" required>
+                <option value="Available" <%= equipment.status === 'Available' ? 'selected' : '' %>>Available</option>
+                <option value="Assigned" <%= equipment.status === 'Assigned' ? 'selected' : '' %>>Assigned</option>
+                <option value="Needs Repair" <%= equipment.status === 'Needs Repair' ? 'selected' : '' %>>Needs Repair</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="assignTo">Assign To:</label>
+            <select class="form-control" id="assignTo" name="assignTo">
+                <option value="">Select Engineer</option>
+                <% engineers.forEach((engineer) => { %>
+                    <option value="<%= engineer._id %>" <%= equipment.assignedTo && equipment.assignedTo.toString() === engineer._id.toString() ? 'selected' : '' %>><%= engineer.username %></option>
+                <% }); %>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Update Equipment</button>
+    </form>
+
+    <a href="/equipment" class="btn btn-secondary mt-4">Back to Equipment List</a>
+</main>
 
 <%- include('../Partials/footer') %>
