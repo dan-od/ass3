@@ -7,7 +7,7 @@ const equipmentSchema = new mongoose.Schema({
         type: String, // Removed enum validation
         default: 'Available',
     },
-    serialNumber: { type: String, unique: true },
+    serialNumber: { type: String, unique: null, require:false },
     assignedTo: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, // Reference to the User model
     history: [
         {

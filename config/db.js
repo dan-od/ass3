@@ -1,6 +1,9 @@
+require('dotenv').config();
+
 const mongoose = require('mongoose');
 
-const MONGODB_URI = 'mongodb+srv://danielookoro:Rukewwe@cluster0.jg55y.mongodb.net/WFSLapp';
+// Get MongoDB URI from environment variable
+const MONGODB_URI = process.env.MONGODB_URI;
 
 mongoose
   .connect(MONGODB_URI, {

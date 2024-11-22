@@ -14,7 +14,7 @@
       </tr>
     </thead>
     <tbody>
-      <% requests.forEach((request) => { %>
+      <% requests.forEach(request => { %>
         <tr>
           <td><%= request.equipmentName %></td>
           <td><%= request.category %></td>
@@ -23,22 +23,22 @@
           <td><%= request.requestedBy?.username || 'N/A' %></td>
           <td><%= request.status %></td>
           <td>
-            <% if (request.canApproveOrReject) { %>
-              <form action="/requests/approve/<%= request._id %>" method="POST" style="display:inline;">
-                <button class="btn btn-success" type="submit">Approve</button>
-              </form>
-              <form action="/requests/reject/<%= request._id %>" method="POST" style="display:inline;">
-                <button class="btn btn-danger" type="submit">Reject</button>
-              </form>
-            <% } else { %>
-              <span><%= request.status %></span>
+            <!-- Only show the approve/reject buttons if the status is not approved or rejected, and the user is a manager or admin -->
+            <% if (request.status !== 'Approved' && request.status !== 'Rejected') { %>
+              <% if (userRole === 'Admin' || userRole === 'Manager') { %>
+                <form action="/requests/approve/<%= request._id %>" method="POST" style="display:inline;">
+                  <button type="submit" class="btn btn-success">Approve</button>
+                </form>
+                <form action="/requests/reject/<%= request._id %>" method="POST" style="display:inline;">
+                  <button type="submit" class="btn btn-danger">Reject</button>
+                </form>
+              <% } %>
             <% } %>
           </td>
         </tr>
       <% }); %>
     </tbody>
   </table>
-    <!-- Back to Dashboard Button -->
   <div class="text-center mt-4" style="clear: both;">
     <% if (userRole === 'Admin') { %>
       <a href="/admin/home" class="btn btn-secondary">Back to Dashboard</a>

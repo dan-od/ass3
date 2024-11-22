@@ -169,23 +169,42 @@ router.post('/assign', async (req, res) => {
   }
 });
 
-// Approve Request
-router.post('/approve/:id', authenticate, authorize('Admin'), async (req, res) => {
+// Route to approve a request
+router.post('/approve/:id', async (req, res) => {
   try {
     const request = await Request.findById(req.params.id);
     if (!request) {
       return res.status(404).send({ message: 'Request not found' });
     }
+
     request.status = 'Approved';
-    request.updatedAt = Date.now();
     await request.save();
 
-    res.redirect('/requests');
+    res.redirect('/requests'); // Redirect to requests list after approval
   } catch (error) {
     console.error('Error approving request:', error.message);
     res.status(500).send({ message: 'Error approving request', error: error.message });
   }
 });
+
+// Route to reject a request
+router.post('/reject/:id', async (req, res) => {
+  try {
+    const request = await Request.findById(req.params.id);
+    if (!request) {
+      return res.status(404).send({ message: 'Request not found' });
+    }
+
+    request.status = 'Rejected';
+    await request.save();
+
+    res.redirect('/requests'); // Redirect to requests list after rejection
+  } catch (error) {
+    console.error('Error rejecting request:', error.message);
+    res.status(500).send({ message: 'Error rejecting request', error: error.message });
+  }
+});
+
 
 // Route to show equipment details
 router.get('/details/:id', authenticate, async (req, res) => {
